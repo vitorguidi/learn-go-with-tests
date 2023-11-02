@@ -7,3 +7,17 @@ func Repeat(s string, x int) string {
 	}
 	return result
 }
+
+func BadLoopVarUsage() int {
+	values := [3]int{1, 2, 3}
+	pointers := make([]*int, 3)
+
+	for i, v := range values {
+		pointers[i] = &v
+	}
+	sum := 0
+	for _, v := range pointers {
+		sum += *v
+	}
+	return sum
+}
