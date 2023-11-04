@@ -1,4 +1,4 @@
-package http_server
+package main
 
 import (
 	"bytes"
@@ -50,12 +50,12 @@ func TestGet(t *testing.T) {
 	})
 }
 
-func TestPut(t *testing.T) {
-	t.Run("should correctly persist score on a put request", func(t *testing.T) {
+func TestPost(t *testing.T) {
+	t.Run("should correctly persist score on a post request", func(t *testing.T) {
 		desiredVal := "20"
 		buf := bytes.Buffer{}
 		fmt.Fprint(&buf, desiredVal)
-		request, _ := http.NewRequest(http.MethodPut, "players/vitor", &buf)
+		request, _ := http.NewRequest(http.MethodPost, "players/vitor", &buf)
 		response := httptest.NewRecorder()
 
 		store := &SpyStore{lastPersistedVal: "", wasPersisted: false}
@@ -70,7 +70,7 @@ func TestPut(t *testing.T) {
 			t.Errorf("got status code %d, want %d", gotStatusCode, desiredStatusCode)
 		}
 		if !store.wasPersisted || store.lastPersistedVal != desiredVal {
-			t.Errorf("failed to persist to store in put request: expected %s to be persisted, it was not", desiredVal)
+			t.Errorf("failed to persist to store in post request: expected %s to be persisted, it was not", desiredVal)
 		}
 	})
 
@@ -78,7 +78,7 @@ func TestPut(t *testing.T) {
 		desiredVal := "20"
 		buf := bytes.Buffer{}
 		fmt.Fprint(&buf, desiredVal)
-		request, _ := http.NewRequest(http.MethodPut, "players/vitor", &buf)
+		request, _ := http.NewRequest(http.MethodPost, "players/vitor", &buf)
 		response := httptest.NewRecorder()
 
 		store := &StubStore{returnErr: PersistFailedError, returnVal: ""}

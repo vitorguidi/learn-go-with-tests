@@ -1,4 +1,4 @@
-package http_server
+package main
 
 import (
 	"errors"
@@ -74,10 +74,10 @@ func (s *PlayerServer) ServeHTTP(writer http.ResponseWriter, request *http.Reque
 	switch request.Method {
 	case http.MethodGet:
 		s.handleGet(writer, player)
-	case http.MethodPut:
+	case http.MethodPost:
 		scoreBytes, _ := io.ReadAll(request.Body)
 		score := string(scoreBytes)
-		s.handlePut(writer, player, score)
+		s.handlePost(writer, player, score)
 	default:
 		writer.WriteHeader(http.StatusBadRequest)
 		return
@@ -94,7 +94,7 @@ func (s *PlayerServer) handleGet(writer http.ResponseWriter, player string) {
 	fmt.Fprintf(writer, score)
 }
 
-func (s *PlayerServer) handlePut(writer http.ResponseWriter, player, score string) {
+func (s *PlayerServer) handlePost(writer http.ResponseWriter, player, score string) {
 	err := s.store.Put(player, score)
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
